@@ -1,0 +1,81 @@
+Fhdl {
+FhdlDef
+  = EntityDef ArchDef
+
+EntityDef
+  = "ENTITY" ident  "{" DefsEnt "}"
+  
+  
+DefsEnt
+  = PortsContainer? Signals? --definitions
+  
+PortsContainer
+  = "PORT" "{" Ports "}" 
+
+Ports
+  = Port ";" Ports ";"--ports
+  | Port 
+  
+Port
+  = ident ":" direction type
+  
+direction
+  = "IN"
+  | "OUT"
+  | "INOUT"
+  | "BUFFER"
+  
+Signals
+= Signal ";" Signals --signals
+  | Signal ";" --lastsingal
+  
+Signal
+  = "SIGNAL" ident type
+
+
+type
+  = stdlogicvector
+  |  stdlogic
+  
+stdlogic
+  = "STD_LOGIC"
+  
+stdlogicvector
+  = "STD_LOGIC_VECTOR" range
+
+range
+  = "(" natural sep incdec sep natural ")"
+
+sep
+  = " "+
+
+incdec
+  = "TO"
+  | "DOWNTO"
+
+ident  (an identifier)
+  = letter alnum*
+
+natural
+  = digit+             -- whole
+  
+  
+ArchDef = "ARCHITECTURE" ident "{" DefsArch  "}"
+
+DefsArch = DefComp* DefMap*
+                                    
+DefComp = ident ":" ident  ";" 
+
+DefMap = "MAP" "(" Connections ")" ";"
+
+Connections = Connection "," Connections -- listconnections
+						| Connection
+                        
+ Connection = Line ":" Line
+ 
+ Line = ident Inside ident -- compinside
+ 			| Signal
+            
+Inside = "."
+
+}
